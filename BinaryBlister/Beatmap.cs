@@ -50,6 +50,11 @@ namespace BinaryBlister
             Key = (int) Convert.ToUInt32(key, 16);
         }
 
+        public string KeyString()
+        {
+            return Convert.ToString(Key, 16);
+        }
+
         internal KeyBeatmap(BinaryBlisterReader reader) : base(reader)
         {
             Key = (int) reader.ReadUInt32();
@@ -79,6 +84,11 @@ namespace BinaryBlister
             {
                 Hash[i] = Convert.ToByte(hash.Substring(i * 2, 2), 16);
             }
+        }
+
+        public string HashString()
+        {
+            return BitConverter.ToString(Hash);
         }
 
         internal HashBeatmap(BinaryBlisterReader reader) : base(reader)
