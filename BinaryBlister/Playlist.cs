@@ -8,8 +8,8 @@ namespace BinaryBlister
     public class Playlist
     {
         internal const string MagicNumberString = "Blist.v3";
-        internal static readonly Encoding Encoding = Encoding.UTF8;
         internal const bool LittleEndian = true;
+        internal static readonly Encoding Encoding = Encoding.UTF8;
 
         internal static readonly byte[] MagicNumber = Encoding.GetBytes(MagicNumberString);
 
@@ -28,7 +28,7 @@ namespace BinaryBlister
             Maps = new List<Beatmap>();
         }
 
-        public Playlist(Stream stream)
+        public Playlist(Stream stream, bool dispose = false)
         {
             ReadMagicNumber(stream);
 
@@ -47,6 +47,19 @@ namespace BinaryBlister
                 maps[i] = Beatmap.Read(reader);
             }
             Maps = maps;
+
+            if (dispose)
+            {
+                stream.Dispose();
+            }
+        }
+
+        public Playlist(byte[] buffer) : this(new MemoryStream(buffer), true)
+        {
+        }
+
+        public Playlist(string playlistFilename) : this(new FileStream(playlistFilename, FileMode.Open), true)
+        {
         }
 
         public void Write(Stream stream)
