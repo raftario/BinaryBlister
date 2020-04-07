@@ -38,21 +38,21 @@ namespace BinaryBlister
     public class KeyBeatmap : Beatmap
     {
         internal const byte Type = 0;
-        public uint Key;
+        public int Key;
 
-        public KeyBeatmap(uint key)
+        public KeyBeatmap(int key)
         {
             Key = key;
         }
 
         public KeyBeatmap(string key)
         {
-            Key = Convert.ToUInt32(key, 16);
+            Key = (int) Convert.ToUInt32(key, 16);
         }
 
         internal KeyBeatmap(BinaryBlisterReader reader) : base(reader)
         {
-            Key = reader.ReadUInt32();
+            Key = (int) reader.ReadUInt32();
         }
 
         internal override void Write(BinaryBlisterWriter writer)

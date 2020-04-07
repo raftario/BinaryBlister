@@ -57,7 +57,9 @@ namespace BinaryBlister
                 return;
             }
 
+#pragma warning disable CS8602 // Fix your shit Microsoft, this can't be null
             Write((byte) s.Length);
+#pragma warning restore CS8602
             Write(Playlist.Encoding.GetBytes(s));
         }
 
@@ -69,7 +71,9 @@ namespace BinaryBlister
                 return;
             }
 
+#pragma warning disable CS8602 // Fix your shit Microsoft, this can't be null
             Write((ushort) s.Length);
+#pragma warning restore CS8602
             Write(Playlist.Encoding.GetBytes(s));
         }
 
