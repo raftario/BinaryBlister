@@ -99,8 +99,8 @@ namespace BinaryBlister
         /// <summary>
         /// Reads a playlist from a file
         /// </summary>
-        /// <param name="playlistFilename">File name</param>
-        public Playlist(string playlistFilename) : this(new FileStream(playlistFilename, FileMode.Open), true)
+        /// <param name="filename">File name</param>
+        public Playlist(string filename) : this(new FileStream(filename, FileMode.Open), true)
         {
         }
 

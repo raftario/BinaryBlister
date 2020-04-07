@@ -38,14 +38,15 @@ namespace BinaryBlister
 
         internal virtual void Write(BinaryBlisterWriter writer)
         {
-            writer.Write(this switch
+            var type = this switch
             {
                 KeyBeatmap _ => KeyBeatmap.Type,
                 HashBeatmap _ => HashBeatmap.Type,
                 ZipBeatmap _ => ZipBeatmap.Type,
                 LevelIDBeatmap _ => LevelIDBeatmap.Type,
                 _ => throw new Exception("Unexpected")
-            });
+            };
+            writer.Write(type);
             writer.WriteDateTimeOffset(DateAdded);
         }
     }
@@ -191,10 +192,10 @@ namespace BinaryBlister
         /// <summary>
         /// Creates a new self-contained beatmap
         /// </summary>
-        /// <param name="zipFilename">Zip file name</param>
-        public ZipBeatmap(string zipFilename)
+        /// <param name="filename">Zip file name</param>
+        public ZipBeatmap(string filename)
         {
-            Zip = File.ReadAllBytes(zipFilename);
+            Zip = File.ReadAllBytes(filename);
         }
 
         internal ZipBeatmap(BinaryBlisterReader reader) : base(reader)
