@@ -5,6 +5,9 @@ using System.Text;
 
 namespace BinaryBlister
 {
+    /// <summary>
+    /// Represents a playlist
+    /// </summary>
     public class Playlist
     {
         internal const string MagicNumberString = "Blist.v3";
@@ -13,12 +16,38 @@ namespace BinaryBlister
 
         internal static readonly byte[] MagicNumber = Encoding.GetBytes(MagicNumberString);
 
+        /// <summary>
+        /// Playlist title
+        /// </summary>
         public string Title;
+
+        /// <summary>
+        /// Playlist author
+        /// </summary>
         public string Author;
+
+        /// <summary>
+        /// Optional playlist description
+        /// </summary>
         public string? Description;
+
+        /// <summary>
+        /// Optional playlist cover
+        /// </summary>
         public byte[]? Cover;
+
+        /// <summary>
+        /// Maps
+        /// </summary>
         public List<Beatmap> Maps;
 
+        /// <summary>
+        /// Creates a new empty playlist with the specified metadata
+        /// </summary>
+        /// <param name="title">Playlist title</param>
+        /// <param name="author">Playlist author</param>
+        /// <param name="description">Optional playlist description</param>
+        /// <param name="cover">Optional playlist cover</param>
         public Playlist(string title, string author, string? description = null, byte[]? cover = null)
         {
             Title = title;
@@ -28,6 +57,11 @@ namespace BinaryBlister
             Maps = new List<Beatmap>();
         }
 
+        /// <summary>
+        /// Reads a playlist from a stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <param name="dispose">Whether to dispose of the stream after reading is finished</param>
         public Playlist(Stream stream, bool dispose = false)
         {
             ReadMagicNumber(stream);
@@ -54,14 +88,26 @@ namespace BinaryBlister
             }
         }
 
+        /// <summary>
+        /// Reads a playlist from a buffer
+        /// </summary>
+        /// <param name="buffer">Binary buffer</param>
         public Playlist(byte[] buffer) : this(new MemoryStream(buffer), true)
         {
         }
 
+        /// <summary>
+        /// Reads a playlist from a file
+        /// </summary>
+        /// <param name="playlistFilename">File name</param>
         public Playlist(string playlistFilename) : this(new FileStream(playlistFilename, FileMode.Open), true)
         {
         }
 
+        /// <summary>
+        /// Writes the playlist to a stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
         public void Write(Stream stream)
         {
             WriteMagicNumber(stream);
@@ -78,6 +124,27 @@ namespace BinaryBlister
             foreach (var map in Maps)
             {
             }
+        }
+
+        /// <summary>
+        /// Writes the playlist to a buffer and returns it
+        /// </summary>
+        /// <returns>Binary buffer</returns>
+        public byte[] Write()
+        {
+            using var stream = new MemoryStream();
+            Write(stream);
+            return stream.ToArray();
+        }
+
+        /// <summary>
+        /// Writes the playlist to a file
+        /// </summary>
+        /// <param name="playlistFilename">File name</param>
+        public void Write(string playlistFilename)
+        {
+            using var stream = new FileStream(playlistFilename, FileMode.Create);
+            Write(stream);
         }
 
         private static void ReadMagicNumber(Stream stream)
