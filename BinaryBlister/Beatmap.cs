@@ -55,8 +55,7 @@ namespace BinaryBlister
 
         internal ZipBeatmap(BinaryBlisterReader reader) : base(reader)
         {
-            var length = (int) reader.ReadUInt32();
-            Zip = reader.ReadBytes(length);
+            Zip = reader.ReadBytes();
         }
     }
 

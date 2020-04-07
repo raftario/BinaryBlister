@@ -37,9 +37,7 @@ namespace BinaryBlister
             Title = reader.ReadShortString();
             Author = reader.ReadShortString();
             Description = reader.ReadOptionalLongString();
-
-            var coverLength = (int) reader.ReadUInt32();
-            Cover = coverLength == 0 ? null : reader.ReadBytes(coverLength);
+            Cover = reader.ReadOptionalBytes();
 
             var mapCount = (int) reader.ReadUInt32();
             var maps = new List<Beatmap>(mapCount);
@@ -50,6 +48,24 @@ namespace BinaryBlister
             Maps = maps;
         }
 
+        public void Write(Stream stream)
+        {
+            WriteMagicNumber(stream);
+
+            using var gzStream = new GZipStream(stream, CompressionMode.Compress);
+            using var writer = new BinaryBlisterWriter(gzStream);
+
+            writer.WriteShortString(Title);
+            writer.WriteShortString(Author);
+            writer.WriteLongString(Description);
+            writer.WriteBytes(Cover);
+
+            writer.Write((uint) Maps.Count);
+            foreach (var map in Maps)
+            {
+            }
+        }
+
         private static void ReadMagicNumber(Stream stream)
         {
             foreach (var b in MagicNumber)
@@ -58,6 +74,14 @@ namespace BinaryBlister
                 {
                     throw new InvalidMagicNumberException();
                 }
+            }
+        }
+
+        private static void WriteMagicNumber(Stream stream)
+        {
+            foreach (var b in MagicNumber)
+            {
+                stream.WriteByte(b);
             }
         }
     }
