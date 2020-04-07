@@ -123,6 +123,7 @@ namespace BinaryBlister
             writer.Write((uint) Maps.Count);
             foreach (var map in Maps)
             {
+                map.Write(writer);
             }
         }
 
