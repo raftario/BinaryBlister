@@ -20,8 +20,7 @@ namespace BinaryBlister
 
         internal Beatmap(BinaryBlisterReader reader)
         {
-            var timestamp = (long) reader.ReadUInt64();
-            DateAdded = DateTimeOffset.FromUnixTimeSeconds(timestamp);
+            DateAdded = reader.ReaDateTimeOffset();
         }
 
         internal static Beatmap Read(BinaryBlisterReader reader)
@@ -32,12 +31,23 @@ namespace BinaryBlister
                 KeyBeatmap.Type => new KeyBeatmap(reader),
                 HashBeatmap.Type => new HashBeatmap(reader),
                 ZipBeatmap.Type => new ZipBeatmap(reader),
-                LevelIdBeatmap.Type => new LevelIdBeatmap(reader),
+                LevelIDBeatmap.Type => new LevelIDBeatmap(reader),
                 _ => throw new InvalidBeatmapTypeException(),
             };
         }
 
-        internal abstract void Write(BinaryBlisterWriter writer);
+        internal virtual void Write(BinaryBlisterWriter writer)
+        {
+            writer.Write(this switch
+            {
+                KeyBeatmap _ => KeyBeatmap.Type,
+                HashBeatmap _ => HashBeatmap.Type,
+                ZipBeatmap _ => ZipBeatmap.Type,
+                LevelIDBeatmap _ => LevelIDBeatmap.Type,
+                _ => throw new Exception("Unexpected")
+            });
+            writer.WriteDateTimeOffset(DateAdded);
+        }
     }
 
     /// <summary>
@@ -86,7 +96,7 @@ namespace BinaryBlister
 
         internal override void Write(BinaryBlisterWriter writer)
         {
-            writer.Write(Type);
+            base.Write(writer);
             writer.Write(Key);
         }
     }
@@ -141,7 +151,7 @@ namespace BinaryBlister
 
         internal override void Write(BinaryBlisterWriter writer)
         {
-            writer.Write(Type);
+            base.Write(writer);
             writer.Write(Hash);
         }
     }
@@ -194,7 +204,7 @@ namespace BinaryBlister
 
         internal override void Write(BinaryBlisterWriter writer)
         {
-            writer.Write(Type);
+            base.Write(writer);
             writer.WriteBytes(Zip);
         }
     }
@@ -202,7 +212,7 @@ namespace BinaryBlister
     /// <summary>
     /// Represents a map entry identified by a level ID
     /// </summary>
-    public class LevelIdBeatmap : Beatmap
+    public class LevelIDBeatmap : Beatmap
     {
         internal const byte Type = 3;
 
@@ -215,19 +225,19 @@ namespace BinaryBlister
         /// Creates a new level ID identified beatmap
         /// </summary>
         /// <param name="levelID">Beatmap level ID</param>
-        public LevelIdBeatmap(string levelID)
+        public LevelIDBeatmap(string levelID)
         {
             LevelID = levelID;
         }
 
-        internal LevelIdBeatmap(BinaryBlisterReader reader) : base(reader)
+        internal LevelIDBeatmap(BinaryBlisterReader reader) : base(reader)
         {
             LevelID = reader.ReadShortString();
         }
 
         internal override void Write(BinaryBlisterWriter writer)
         {
-            writer.Write(Type);
+            base.Write(writer);
             writer.WriteShortString(LevelID);
         }
     }

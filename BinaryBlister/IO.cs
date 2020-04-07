@@ -37,6 +37,12 @@ namespace BinaryBlister
             var length = (int) ReadUInt32();
             return length == 0 ? null : ReadBytes(length);
         }
+
+        public DateTimeOffset ReaDateTimeOffset()
+        {
+            var timestamp = (long) ReadUInt64();
+            return DateTimeOffset.FromUnixTimeSeconds(timestamp);
+        }
     }
 
     internal class BinaryBlisterWriter : BinaryWriter
@@ -58,9 +64,10 @@ namespace BinaryBlister
             }
 
 #pragma warning disable CS8602 // Fix your shit Microsoft, this can't be null
-            Write((byte) s.Length);
+            var bytes = Playlist.Encoding.GetBytes(s);
 #pragma warning restore CS8602
-            Write(Playlist.Encoding.GetBytes(s));
+            Write((byte) bytes.Length);
+            Write(bytes);
         }
 
         public void WriteLongString(string? s)
@@ -72,9 +79,10 @@ namespace BinaryBlister
             }
 
 #pragma warning disable CS8602 // Fix your shit Microsoft, this can't be null
-            Write((ushort) s.Length);
+            var bytes = Playlist.Encoding.GetBytes(s);
 #pragma warning restore CS8602
-            Write(Playlist.Encoding.GetBytes(s));
+            Write((ushort) bytes.Length);
+            Write(bytes);
         }
 
         public void WriteBytes(byte[]? b)
@@ -87,6 +95,12 @@ namespace BinaryBlister
 
             Write((uint) b.Length);
             Write(b);
+        }
+
+        public void WriteDateTimeOffset(DateTimeOffset dto)
+        {
+            var timestamp = dto.ToUnixTimeSeconds();
+            Write((ulong) timestamp);
         }
     }
 }
