@@ -78,7 +78,7 @@ namespace BinaryBlister
             var maps = new List<Beatmap>(mapCount);
             for (var i = 0; i < mapCount; i++)
             {
-                maps[i] = Beatmap.Read(reader);
+                maps.Add(Beatmap.Read(reader));
             }
             Maps = maps;
 

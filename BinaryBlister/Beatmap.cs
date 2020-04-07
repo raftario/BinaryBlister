@@ -20,7 +20,7 @@ namespace BinaryBlister
 
         internal Beatmap(BinaryBlisterReader reader)
         {
-            DateAdded = reader.ReaDateTimeOffset();
+            DateAdded = reader.ReadDateTimeOffset();
         }
 
         internal static Beatmap Read(BinaryBlisterReader reader)

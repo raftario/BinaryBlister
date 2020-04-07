@@ -38,7 +38,7 @@ namespace BinaryBlister
             return length == 0 ? null : ReadBytes(length);
         }
 
-        public DateTimeOffset ReaDateTimeOffset()
+        public DateTimeOffset ReadDateTimeOffset()
         {
             var timestamp = (long) ReadUInt64();
             return DateTimeOffset.FromUnixTimeSeconds(timestamp);
