@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 
 namespace BinaryBlister
@@ -7,6 +8,10 @@ namespace BinaryBlister
     {
         public BinaryBlisterReader(GZipStream input) : base(input, Playlist.Encoding)
         {
+            if (BitConverter.IsLittleEndian != Playlist.LittleEndian)
+            {
+                throw new UnsupportedEndiannessException();
+            }
         }
 
         public string ReadShortString()
@@ -38,6 +43,10 @@ namespace BinaryBlister
     {
         public BinaryBlisterWriter(GZipStream output) : base(output, Playlist.Encoding)
         {
+            if (BitConverter.IsLittleEndian != Playlist.LittleEndian)
+            {
+                throw new UnsupportedEndiannessException();
+            }
         }
 
         public void WriteShortString(string? s)

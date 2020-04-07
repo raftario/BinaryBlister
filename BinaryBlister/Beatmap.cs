@@ -31,6 +31,8 @@ namespace BinaryBlister
                 _ => throw new InvalidBeatmapTypeException(),
             };
         }
+
+        internal abstract void Write(BinaryBlisterWriter writer);
     }
 
     public class KeyBeatmap : Beatmap
@@ -51,6 +53,12 @@ namespace BinaryBlister
         internal KeyBeatmap(BinaryBlisterReader reader) : base(reader)
         {
             Key = reader.ReadUInt32();
+        }
+
+        internal override void Write(BinaryBlisterWriter writer)
+        {
+            writer.Write(Type);
+            writer.Write(Key);
         }
     }
 
@@ -76,6 +84,12 @@ namespace BinaryBlister
         internal HashBeatmap(BinaryBlisterReader reader) : base(reader)
         {
             Hash = reader.ReadBytes(20);
+        }
+
+        internal override void Write(BinaryBlisterWriter writer)
+        {
+            writer.Write(Type);
+            writer.Write(Hash);
         }
     }
 
@@ -105,6 +119,12 @@ namespace BinaryBlister
         {
             Zip = reader.ReadBytes();
         }
+
+        internal override void Write(BinaryBlisterWriter writer)
+        {
+            writer.Write(Type);
+            writer.WriteBytes(Zip);
+        }
     }
 
     public class LevelIdBeatmap : Beatmap
@@ -120,6 +140,12 @@ namespace BinaryBlister
         internal LevelIdBeatmap(BinaryBlisterReader reader) : base(reader)
         {
             LevelID = reader.ReadShortString();
+        }
+
+        internal override void Write(BinaryBlisterWriter writer)
+        {
+            writer.Write(Type);
+            writer.WriteShortString(LevelID);
         }
     }
 }

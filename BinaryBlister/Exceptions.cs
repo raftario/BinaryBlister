@@ -9,4 +9,8 @@ namespace BinaryBlister
     public class InvalidBeatmapTypeException : Exception
     {
     }
+
+    public class UnsupportedEndiannessException : Exception
+    {
+    }
 }

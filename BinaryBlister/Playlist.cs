@@ -9,6 +9,7 @@ namespace BinaryBlister
     {
         internal const string MagicNumberString = "Blist.v3";
         internal static readonly Encoding Encoding = Encoding.UTF8;
+        internal const bool LittleEndian = true;
 
         internal static readonly byte[] MagicNumber = Encoding.GetBytes(MagicNumberString);
 
