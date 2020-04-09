@@ -1,5 +1,9 @@
 # Binary Blister
 
+**BLISTER HAS BEEN ABANDONNED** - [**NEW PLAYLIST FORMAT**](https://github.com/raftario/blist)
+
+---
+
 *Beat Saber playlist handling library*
 
 ## About
